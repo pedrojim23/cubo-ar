@@ -4,9 +4,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <script src="https://aframe.io/releases/1.2.0/aframe.min.js"></script>
     <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
+    <script>
+      AFRAME.registerComponent('zoom-controls', {
+        init: function () {
+          this.camera = document.querySelector('[camera]');
+          this.zoom = 1;
+          
+          document.addEventListener('keydown', (event) => {
+            if (event.key === '+') {
+              this.zoom += 0.1;
+            } else if (event.key === '-') {
+              this.zoom -= 0.1;
+            }
+            this.zoom = Math.max(0.1, Math.min(this.zoom, 2));
+            this.camera.setAttribute('zoom', this.zoom);
+          });
+        }
+      });
+    </script>
   </head>
   <body style="margin: 0; overflow: hidden;">
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false;">
+    <a-scene 
+      embedded 
+      arjs="sourceType: webcam; debugUIEnabled: true; detectionMode: mono_and_matrix; matrixCodeType: 3x3;"
+      vr-mode-ui="enabled: false"
+      zoom-controls>
       <a-marker preset="hiro">
         <a-box position="0 0.5 0" material="color: red">
           <a-animation attribute="rotation"
